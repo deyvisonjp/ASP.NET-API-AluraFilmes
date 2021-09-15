@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace FilmesAPI.Models
 {
-    public class Cinema
+    public class Endereco
     {
         [Key]
         [Required]
         public int Id { get; set; }
-        [Required(ErrorMessage = "O campo de nome é obrigatório")]
-        public string Nome { get; set; }
-        public int EnderecoFK { get; set; }
-        public int GerenteFK { get; set; }
+        [Required]
+        public string Logradouro { get; set; }
+        [Required]
+        public string Bairro { get; set; }
+        [Required]
+        public int Numero { get; set; }
     }
 }

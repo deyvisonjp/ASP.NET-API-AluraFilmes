@@ -11,6 +11,7 @@ Aplicando a Mudanã após confirmação da migration
 - Instalar pacote AutoMapper extensions for ASP.NET Core por meio do Nuget
 *Antes: 
 ```
+~~~C#
 [HttpPut("{id}")]
         public IActionResult AtualizarFilme(int id, [FromBody] UpdateFilmeDto novoFilme)
         {
