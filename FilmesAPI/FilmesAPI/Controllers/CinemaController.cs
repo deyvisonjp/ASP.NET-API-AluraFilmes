@@ -31,6 +31,7 @@ namespace FilmesAPI.Controllers
             _context.SaveChanges();
             return CreatedAtAction(nameof(RecuperaCinemasPorId), new { Id = cinema.Id }, cinema);
         }
+
         [HttpGet("{id}")]
         public IActionResult RecuperaCinemasPorId(int id)
         {
@@ -42,11 +43,33 @@ namespace FilmesAPI.Controllers
             }
             return NotFound();
         }
+
+        //[HttpGet]
+        //public IEnumerable<Cinema> RecuperaCinemas()
+        //{
+        //    return _context.Cinemas;
+        //}
         [HttpGet]
-        public IEnumerable<Cinema> RecuperaCinemas()
+        public IActionResult RecuperaCinemas([FromQuery] string nomeDoFilme)
         {
-            return _context.Cinemas;
+            List<Cinema> cinemas = _context.Cinemas.ToList();
+            if (cinemas == null)
+            {
+                return NotFound();
+            }
+            if (!string.IsNullOrEmpty(nomeDoFilme))
+            {
+                IEnumerable<Cinema> query = from cinema in cinemas
+                                            where cinema.Sessoes.Any(sessao =>
+                                            sessao.Filme.Titulo == nomeDoFilme)
+                                            select cinema;
+
+                cinemas = query.ToList();
+            }
+            List<ReadCinemaDto> readDto = _mapper.Map<List<ReadCinemaDto>>(cinemas);
+            return Ok(readDto);
         }
+
         [HttpPut("{id}")]
         public IActionResult AtualizaCinema(int id, [FromBody] UpdateCinemaDto cinemaDto)
         {

@@ -48,11 +48,11 @@ namespace FilmesAPI.Controllers
             #endregion
         }
 
-        [HttpGet]
-        public IEnumerable<Filme> RecuperaFilmes()
-        {
-            return _context.Filmes;
-        }
+        //[HttpGet]
+        //public IEnumerable<Filme> RecuperaFilmes()
+        //{
+        //    return _context.Filmes;
+        //}
 
         [HttpGet("{id}")]
         public IActionResult RecupeFilmePorId(int id)
@@ -75,6 +75,27 @@ namespace FilmesAPI.Controllers
             //}
             //return null;
             #endregion
+        }
+
+        [HttpGet]
+        public IActionResult RecuperaFilmePorClassificacao([FromQuery] int? classificacaoEtaria = null) // FromQuery -> Utilizando esta anotação, é possível receber nossos parâmetros de consulta definidos através da URL
+        {
+            List<Filme> filmes;
+
+            if (classificacaoEtaria == null)
+            {
+                filmes = _context.Filmes.ToList();
+            }
+            else
+            {
+                filmes = _context.Filmes.Where(filme => filme.ClassificacaoEtaria <= classificacaoEtaria).ToList();
+            }
+            if (filmes != null)
+            {
+                List<ReadFilmeDto> readDto = _mapper.Map<List<ReadFilmeDto>>(filmes);
+                return Ok(readDto);
+            }
+            return NotFound();
         }
 
         [HttpPut("{id}")]
